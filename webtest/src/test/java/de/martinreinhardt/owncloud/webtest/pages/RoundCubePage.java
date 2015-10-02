@@ -7,18 +7,19 @@
  */
 package de.martinreinhardt.owncloud.webtest.pages;
 
-import net.thucydides.core.annotations.DefaultUrl;
-import net.thucydides.core.annotations.findby.FindBy;
+
+import net.serenitybdd.core.annotations.findby.FindBy;
 import net.thucydides.core.reports.adaptors.xunit.model.TestError;
 
+import org.apache.log4j.Logger;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import de.martinreinhardt.owncloud.webtest.util.UITestConstants;
-
-@DefaultUrl(UITestConstants.DEFAULT_URL)
 public class RoundCubePage extends PortalPage {
+
+	// Logger
+	private static final Logger LOG = Logger.getLogger(RoundCubePage.class);
 
 	/**
 	 * iframe id
@@ -29,6 +30,10 @@ public class RoundCubePage extends PortalPage {
 	 * reference id of loader item
 	 */
 	private static final String ROUNDCUBE_LOADER = "roundcubeLoader";
+	/**
+	 * reference xpath to new loader
+	 */
+	private static final String ROUNDCUBE_LOADER_NEW = "//*[contains(@class,'loading')]";
 
 	@FindBy(id = ROUNDCUBE_FRAME)
 	private WebElement rcFrame;
@@ -39,11 +44,14 @@ public class RoundCubePage extends PortalPage {
 	@FindBy(id = "rcmloginuser")
 	private WebElement rcLogin;
 
-	@FindBy(css = "#rcmrow1 > td.subject > a")
+	@FindBy(xpath = "(//tbody//td[contains(@class,'subject')]/a)[1]")
 	private WebElement firstEmail;
 
 	@FindBy(id = ROUNDCUBE_LOADER)
 	private WebElement ajaxLoader;
+
+	@FindBy(xpath = ROUNDCUBE_LOADER_NEW)
+	private WebElement newAjaxLoader;
 
 	public RoundCubePage(final WebDriver pWebDriver) {
 		super(pWebDriver);
@@ -55,9 +63,21 @@ public class RoundCubePage extends PortalPage {
 	 * @throws TestError
 	 */
 	private void wait_for_rc_load() throws TestError {
+		waitFor(300).milliseconds();
 		this.load_iFrame(ROUNDCUBE_FRAME);
 		try {
-			waitFor(500).milliseconds();
+			if (element(newAjaxLoader).isCurrentlyVisible()) {
+				// wait for loader icon to disappear
+				element(newAjaxLoader).waitUntilNotVisible();
+				if (isRcLoginDisplayed()) {
+					throw new TestError("Roundcube Login should not be visible!");
+				}
+				LOG.info("AJAX loader disappeared. Loading complete...");
+			}
+		} catch (final NoSuchElementException e1) {
+			LOG.info("New AJAX Roundcube loader not found");
+		}
+		try {
 			if (element(ajaxLoader).isCurrentlyVisible()) {
 				// wait for loader icon to disappear
 				element(ajaxLoader).waitUntilNotVisible();
@@ -66,16 +86,16 @@ public class RoundCubePage extends PortalPage {
 				}
 				LOG.info("AJAX loader disappeared. Loading complete...");
 			}
-		} catch (final NoSuchElementException e) {
+		} catch (final NoSuchElementException e2) {
+			LOG.info("AJAX Roundcube loader not found");
 		}
 	}
 
 	public String getFirstMessageSubject() throws TestError {
 		wait_for_rc_load();
-		String result = null;
 		load_iFrame(ROUNDCUBE_FRAME);
 		clickOn(firstEmail);
-		result = firstEmail.getText();
+		final String result = firstEmail.getText();
 		back_to_parent_document();
 		return result;
 	}

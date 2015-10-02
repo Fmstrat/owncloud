@@ -10,10 +10,11 @@ package de.martinreinhardt.owncloud.webtest.tests;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
+import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Story;
 import net.thucydides.core.annotations.WithTag;
+import net.thucydides.core.annotations.WithTags;
 import net.thucydides.core.reports.adaptors.xunit.model.TestError;
-import net.thucydides.junit.runners.ThucydidesRunner;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -28,8 +29,11 @@ import de.martinreinhardt.owncloud.webtest.RoundCube;
  * 
  */
 @Story(RoundCube.ShowMailView.class)
-@WithTag(type = "app", value = "RoundCube")
-@RunWith(ThucydidesRunner.class)
+@WithTags({ 
+	@WithTag(type = "app", value = "RoundCube"),
+    @WithTag(type = "testtype", name = "smoke")
+})
+@RunWith(SerenityRunner.class)
 public class RoundCubeMailPositiveIT extends RoundCubeMockedMailIT {
 
 	// Logger
@@ -44,12 +48,12 @@ public class RoundCubeMailPositiveIT extends RoundCubeMockedMailIT {
 	@Override
 	public void executeTestStepsFrontend() throws TestError {
 		endUserLogin.enter_login_area();
-		endUserLogin.do_login(getPositiveEmailUserWhichIsAOcUser().getUsername(), getPositiveEmailUserWhichIsAOcUser()
-				.getPassword());
+		endUserLogin.do_login(//@formatter:off
+				getPositiveEmailUserWhichIsAOcUser().getUsername(), 
+				getPositiveEmailUserWhichIsAOcUser().getPassword());//@formatter:on
 		loggedInuserSteps.go_to_roundcube_view();
 		rcSteps.is_not_showing_errors();
 		rcSteps.message_should_have_a_valid_subject();
-		rcSteps.waitFor(1).minutes();
 		rcSteps.is_not_showing_errors();
 	}
 }

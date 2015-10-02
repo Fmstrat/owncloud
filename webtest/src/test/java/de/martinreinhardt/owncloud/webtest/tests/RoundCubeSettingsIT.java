@@ -6,15 +6,6 @@ package de.martinreinhardt.owncloud.webtest.tests;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 
-import net.thucydides.core.annotations.Issues;
-import net.thucydides.core.annotations.Steps;
-import net.thucydides.core.annotations.Story;
-import net.thucydides.core.annotations.WithTag;
-import net.thucydides.core.annotations.WithTags;
-import net.thucydides.core.reports.adaptors.xunit.model.TestError;
-import net.thucydides.junit.annotations.Concurrent;
-import net.thucydides.junit.runners.ThucydidesRunner;
-
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
@@ -26,32 +17,40 @@ import com.icegreen.greenmail.user.UserException;
 import de.martinreinhardt.owncloud.webtest.RoundCube;
 import de.martinreinhardt.owncloud.webtest.steps.AdminSteps;
 import de.martinreinhardt.owncloud.webtest.util.EmailUserDetails;
+import net.serenitybdd.junit.runners.SerenityRunner;
+import net.thucydides.core.annotations.Issues;
+import net.thucydides.core.annotations.Steps;
+import net.thucydides.core.annotations.Story;
+import net.thucydides.core.annotations.WithTag;
+import net.thucydides.core.annotations.WithTags;
+import net.thucydides.core.reports.adaptors.xunit.model.TestError;
+import net.thucydides.junit.annotations.Concurrent;
 
 /**
  * @author mreinhardt
  */
 @Story(RoundCube.ManualLogin.class)
-//@formatter:off
-@WithTags({ 
-	@WithTag(type = "app", value = "RoundCube"), 
-	@WithTag(type = "feature", value = "user settings"),
-	@WithTag(type = "feature", value = "login"), 
-	@WithTag(type = "testtype", name = "smoke")
+// @formatter:off
+@WithTags({ @WithTag(type = "app", value = "RoundCube"),
+		@WithTag(type = "feature", value = "user settings"),
+		@WithTag(type = "feature", value = "login") 
 })
-//@formatter:on
-@RunWith(ThucydidesRunner.class)
+// @formatter:on
+@RunWith(SerenityRunner.class)
 @Concurrent(threads = "1")
 public class RoundCubeSettingsIT extends RoundCubeMockedMailIT {
 
 	// Logger
-	protected static final Logger LOG = Logger.getLogger(RoundCubeSettingsIT.class);
+	protected static final Logger LOG = Logger
+			.getLogger(RoundCubeSettingsIT.class);
 
 	@Steps
 	private AdminSteps adminSteps;
 
 	@Test
 	@Issues({ "#205", "#209", "#213", "#259", "#263" })
-	public void test_roundcube_mail_without_autologin() throws AddressException, MessagingException, UserException,
+	public void test_roundcube_mail_without_autologin()
+			throws AddressException, MessagingException, UserException,
 			TestError {
 		runEmailTest();
 	}
@@ -77,7 +76,8 @@ public class RoundCubeSettingsIT extends RoundCubeMockedMailIT {
 		endUserLogin.do_login(ocLogin.getUsername(), ocLogin.getPassword());
 		try {
 			loggedInuserSteps.go_to_user_settings();
-			loggedInuserSteps.update_roundcube_login_and_save(rcLogin.getUsername(), rcLogin.getPassword());
+			loggedInuserSteps.update_roundcube_login_and_save(
+					rcLogin.getUsername(), rcLogin.getPassword());
 			loggedInuserSteps.logout();
 			endUserLogin.do_login(ocLogin.getUsername(), ocLogin.getPassword());
 			loggedInuserSteps.go_to_roundcube_view();

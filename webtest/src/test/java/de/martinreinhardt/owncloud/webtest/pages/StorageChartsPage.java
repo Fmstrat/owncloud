@@ -7,17 +7,15 @@
  */
 package de.martinreinhardt.owncloud.webtest.pages;
 
-import net.thucydides.core.annotations.DefaultUrl;
-import net.thucydides.core.annotations.findby.FindBy;
+
+import net.serenitybdd.core.annotations.findby.FindBy;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import de.martinreinhardt.owncloud.webtest.util.AbstractPage;
-import de.martinreinhardt.owncloud.webtest.util.UITestConstants;
 
-@DefaultUrl(UITestConstants.DEFAULT_URL)
 public class StorageChartsPage extends AbstractPage {
 
 	@FindBy(id = "storagecharts2")

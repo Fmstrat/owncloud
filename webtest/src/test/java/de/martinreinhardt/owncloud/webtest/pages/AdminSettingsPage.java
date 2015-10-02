@@ -7,21 +7,18 @@
  */
 package de.martinreinhardt.owncloud.webtest.pages;
 
-import net.thucydides.core.annotations.DefaultUrl;
+import net.serenitybdd.core.annotations.findby.FindBy;
 import net.thucydides.core.annotations.Story;
 import net.thucydides.core.annotations.WithTag;
-import net.thucydides.core.annotations.findby.FindBy;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import de.martinreinhardt.owncloud.webtest.OwnCloud;
 import de.martinreinhardt.owncloud.webtest.util.AbstractPage;
-import de.martinreinhardt.owncloud.webtest.util.UITestConstants;
 
 @Story(OwnCloud.Apps.class)
 @WithTag("Apps")
-@DefaultUrl(UITestConstants.DEFAULT_URL)
 public class AdminSettingsPage extends AbstractPage {
 
 	@FindBy(id = "rcAdvancedSettings")

@@ -7,34 +7,36 @@
  */
 package de.martinreinhardt.owncloud.webtest.pages;
 
-import net.thucydides.core.annotations.DefaultUrl;
+import net.serenitybdd.core.annotations.findby.FindBy;
 import net.thucydides.core.annotations.Story;
 import net.thucydides.core.annotations.WithTag;
-import net.thucydides.core.annotations.findby.FindBy;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import de.martinreinhardt.owncloud.webtest.OwnCloud;
 import de.martinreinhardt.owncloud.webtest.util.AbstractPage;
-import de.martinreinhardt.owncloud.webtest.util.UITestConstants;
 
 @Story(OwnCloud.Apps.class)
 @WithTag("Apps")
-@DefaultUrl(UITestConstants.DEFAULT_URL)
 public class PortalPage extends AbstractPage {
 
-	// OC7 app menu
-	@FindBy(xpath = "//a[@class='menutoggle']")
+	//  APP MENU
+	
+	@FindBy(xpath = "//a[contains(@class,'menutoggle')]")
 	private WebElement appMenu;
+	
+	// APPS
 
 	@FindBy(xpath = "//*[@data-id='roundcube_index']/a/img")
 	private WebElement roundcubeButton;
 
-	@FindBy(xpath = "//*[@data-id='storagecharts2']/a/img")
+	@FindBy(xpath = "//*[@data-id='storagecharts2_index']/a/img")
 	private WebElement storageChartsButton;
+	
+	// SETTINGS MENU
 
-	@FindBy(xpath = "//*[@id='settings']/span")
+	@FindBy(xpath = "//*[@id='settings']//span")
 	private WebElement settingsDropdownButton;
 
 	@FindBy(xpath = "//*[@id='settings']//li[1]/a")
